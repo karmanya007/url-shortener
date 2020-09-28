@@ -1,0 +1,37 @@
+{
+	"name": "url-shortener",
+	"version": "1.0.0",
+	"description": "Shortens the URL",
+	"main": "server.js",
+	"scripts": {
+		"dev": "nodemon server.js",
+		"start": "node server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/karmanya007/url-shortener.git"
+	},
+	"keywords": [
+		"node",
+		"express",
+		"ejs",
+		"mongoDB",
+		"mongoose"
+	],
+	"author": "Karmanya Veer Sharma",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/karmanya007/url-shortener/issues"
+	},
+	"homepage": "https://github.com/karmanya007/url-shortener#readme",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"ejs": "^3.1.5",
+		"express": "^4.17.1",
+		"helmet": "^4.1.1",
+		"mongoose": "^5.10.7",
+		"morgan": "^1.10.0",
+		"shortid": "^2.2.15",
+		"validator": "^13.1.17"
+	}
+}

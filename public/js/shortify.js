@@ -17,10 +17,12 @@ export const shortify = async (url, slug) => {
 			});
 		}
 	} catch (err) {
-		if (err.response.data.message.startsWith('E11000'))
+		if (err.response.data.message.startsWith('E11000')) {
 			alert('ERROR!! SLUG ALREADY IN USE');
-		else {
+			console.log(err);
+		} else {
 			alert('Oops, something went wrong');
+			console.log(err);
 		}
 	}
 };
@@ -29,14 +31,27 @@ export const deletify = async (id) => {
 	try {
 		const res = await axios({
 			method: 'DELETE',
-			url: `/${id}`,
+			url: `/url/${id}`,
 		});
 		if (res.status === 204) {
 			alert('Short url deleted successfully!!');
 			window.setTimeout(() => {
 				location.assign('/');
-			});
+			}, 20);
 		}
+	} catch (err) {
+		alert('Something went wrong');
+		console.log(err);
+	}
+};
+
+export const checkAvailability = async (slug) => {
+	try {
+		const res = await axios({
+			method: 'GET',
+			url: `/slug/checkSlug/${slug}`,
+		});
+		return res.data.message;
 	} catch (err) {
 		alert('Something went wrong');
 	}

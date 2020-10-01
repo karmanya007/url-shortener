@@ -5,21 +5,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
     <title>URL SHORTENER</title>
 </head>
 
 <body class="bg-secondary">
     <div class="container">
-        <h1 class="m-5" style="text-align: center;">URL SHORTENER</h1>
-        <form class="my-4 form-inline" id="myForm">
+        <h1 class="m-5" style="text-align: center;font-weight: 700;font-size: 4em;">URL SHORTENER</h1>
+        <form class="my-4" id="myForm">
             <label for="url" class="sr-only">URL</label>
-            <input placeholder="URL" required type="url" name="url" id="url" class="form-control col mr-2">
-            <label for="slug" class="sr-only">SLUG</label>
-            <input placeholder="SLUG(Optional)" type="text" name="slug" id="slug" class="form-control mr-2">
-            <button type="submit" class="btn btn-success" id="submitBtn">Shorten</button>
+            <input placeholder="http://" required type="url" name="url" id="url" class="form-control col mr-2 mb-2">
+            <div class="col-md-12 text-center mt-4">
+                <button class="btn btn-info mr-2" type="button" data-toggle="collapse" data-target="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Options
+                </button>
+                <button type="submit" class="btn btn-warning ml-2" id="submitBtn">Shorten</button>
+            </div>
+            <div class="col-md-12 text-center mt-4">
+                <div class="collapse" id="collapseExample">
+                    <h2>Customize link</h2>
+                    <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="options" value="public" checked> Public
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="options" value="private"> Private
+                        </label>
+                    </div>
+                    <div class="mt-4">
+                        <h2 class="text-success d-inline"><%= host %>/</h2>
+                        <label for="slug" class="sr-only">SLUG</label>
+                        <input placeholder="" type="text" name="slug" id="slug" class="form-control-sm">
+                        <div class="mt-2">
+                            <a class="btn btn-success btn-sm check-btn" id="check-link-availability">Check
+                                Availability</a>
+                            <h4 class="mt-2 text-dark" id="link-availability-status"></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
 
         <table class="table table-striped table-dark table-hover table-responsive-sm w-100">
@@ -36,14 +72,19 @@
                 <% urls.forEach((url,i) => { %>
                 <tr data-id="<%= url._id %> ">
                     <th><%= i+1 %> </th>
-                    <td><a href="<%= url.fullURL %>"><%= url.fullURL %></a></td>
-                    <td><a href="<%= url.slug %>" target="_blank" class="slugUrl"><%= url.slug %></a></td>
+                    <td><a href="<%= url.fullURL %>" target="_blank"><%= url.fullURL %></a></td>
+                    <td><a href="/url/slug/<%= url.slug %>" target="_blank" class="slugUrl"><%= url.slug %></a></td>
                     <td><%= url.clicks %></td>
                     <td>
                         <li class="list-inline-item">
                             <button class="btn text-danger deleteBtn" type="button"><i
                                     class="fa fa-times-circle"></i></button>
                         </li>
+                        <!-- <li class="list-inline-item">
+                            <button type="button" class="close text-danger deleteBtn" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </li> -->
                     </td>
                 </tr>
                 <% }) %>
@@ -51,6 +92,11 @@
             </tbody>
         </table>
     </div>
+    <script>
+        /* $(document).ready(function () {
+            $('.toast').toast('show');
+        }); */
+    </script>
     <script type="text/javascript" src="/js/bundle.js"></script>
 </body>
 

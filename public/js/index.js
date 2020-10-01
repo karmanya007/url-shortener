@@ -1,9 +1,11 @@
 import '@babel/polyfill';
-import { shortify, deletify } from './shortify';
+import { shortify, deletify, checkAvailability } from './shortify';
 
 const form = document.getElementById('myForm');
 const slugUrls = document.querySelectorAll('.slugUrl');
 const deleteBtns = document.querySelectorAll('.deleteBtn');
+const checkBtn = document.getElementById('check-link-availability');
+const privacyBtn = document.querySelector('.active');
 
 if (form) {
 	form.addEventListener('submit', (e) => {
@@ -33,4 +35,17 @@ if (deleteBtns) {
 			);
 		});
 	});
+}
+
+if (checkBtn) {
+	checkBtn.addEventListener('click', async () => {
+		const slug = document.getElementById('slug').value;
+		const isAvailable = await checkAvailability(slug);
+		const messageBox = document.getElementById('link-availability-status');
+		messageBox.innerText = isAvailable;
+	});
+}
+
+if (privacyBtn) {
+	console.log(privacyBtn.childNodes[1].value);
 }

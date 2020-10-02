@@ -78,9 +78,9 @@
                     <td><a href="<%= url.fullURL %>" target="_blank"><%= url.fullURL %></a></td>
                     <td><%= url.isPrivate %></td>
                     <% if (url.isPrivate === false) { %>
-                    <td><a href="/url/slug/<%= url.slug %>" target="_blank" class="slugUrl"><%= url.slug %></a></td>
+                    <td><a href="/<%= url.slug %>" target="_blank" class="slugUrl"><%= url.slug %></a></td>
                     <%} else { %>
-                    <td><a href="/url/slug/<%= url.slug %>/<%= url.privateSlug %>" target=_blank"
+                    <td><a href="/<%= url.slug %>/<%= url.privateSlug %>" target=_blank"
                             class="slugUrl"><%= url.slug %>/<%= url.privateSlug %> </a></td>
                     <% } %>
                     <td><%= url.clicks %></td>

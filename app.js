@@ -11,7 +11,7 @@ const compression = require('compression');
 const hpp = require('hpp');
 
 const urlRouter = require('./routes/urlRoutes');
-const viewRouter = require('./routes/viewRoutes');
+const view_redirectRouter = require('./routes/view_redirectRoutes');
 
 const app = express();
 
@@ -64,7 +64,7 @@ app.use(hpp());
 app.use(compression());
 
 // Routes
-app.use('/', viewRouter);
+app.use('/', view_redirectRouter);
 app.use('/url', urlRouter);
 
 // Error handler

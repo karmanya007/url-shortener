@@ -50,7 +50,6 @@ exports.redirect = async (req, res, next) => {
 	const { slug, privateSlug } = req.params;
 	try {
 		const query = await URL.findOne({ slug });
-		console.log(query);
 		if (query) {
 			if (privateSlug && query.user.userIp === req.ip && query.isPrivate) {
 				const clicks = query.clicks + 1;

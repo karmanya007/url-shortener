@@ -1,20 +1,31 @@
 const URL = require('./../models/urlModel');
+const User = require('./../models/userModel');
 
-exports.getUrl = async (req, res, next) => {
-	let newUser;
-	let { url, slug } = req.body;
-	console.log({ url, slug });
+exports.createUrl = async (req, res, next) => {
+	let newUrl;
+	let { url, slug, isPrivate } = req.body;
+	const user = await User.findOne({ userIp: req.ip });
 	try {
 		if (slug) {
-			newUser = await URL.create({ fullURL: url, slug: slug, userIp: req.ip });
+			newUrl = await URL.create({
+				fullURL: url,
+				slug: slug,
+				user: user._id,
+				isPrivate: isPrivate,
+			});
 		} else {
-			newUser = await URL.create({ fullURL: url, userIp: req.ip });
+			newUrl = await URL.create({
+				fullURL: url,
+				user: user._id,
+				isPrivate: isPrivate,
+			});
 		}
 		res.status(201).json({
 			status: 'success',
-			url: newUser.fullURL,
-			slug: newUser.slug,
-			clicks: newUser.clicks,
+			url: newUrl.fullURL,
+			slug: newUrl.slug,
+			clicks: newUrl.clicks,
+			isPrivate: newUrl.isPrivate,
 		});
 	} catch (err) {
 		next(err);
@@ -36,13 +47,22 @@ exports.deleteUrl = async (req, res, next) => {
 };
 
 exports.redirect = async (req, res, next) => {
-	const slug = req.params.slug;
+	const { slug, privateSlug } = req.params;
 	try {
 		const query = await URL.findOne({ slug });
+		console.log(query);
 		if (query) {
-			const clicks = query.clicks + 1;
-			res.redirect(query.fullURL);
-			await URL.findByIdAndUpdate(query._id, { clicks });
+			if (privateSlug && query.user.userIp === req.ip && query.isPrivate) {
+				const clicks = query.clicks + 1;
+				res.redirect(query.fullURL);
+				await URL.findByIdAndUpdate(query._id, { clicks });
+			} else if (slug && !privateSlug && !query.isPrivate) {
+				const clicks = query.clicks + 1;
+				res.redirect(query.fullURL);
+				await URL.findByIdAndUpdate(query._id, { clicks });
+			} else {
+				res.redirect(`/error/privateSlug`);
+			}
 		} else {
 			res.redirect(`/error/${slug}`);
 		}
@@ -56,7 +76,7 @@ exports.checkSlug = async (req, res, next) => {
 	try {
 		const query = await URL.findOne({ slug });
 		if (query) {
-			res.status(400).json({
+			res.status(200).json({
 				status: 'Invalid',
 				message: 'Slug already exists. Try another one.',
 			});

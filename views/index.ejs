@@ -23,6 +23,8 @@
 <body class="bg-secondary">
     <div class="container">
         <h1 class="m-5" style="text-align: center;font-weight: 700;font-size: 4em;">URL SHORTENER</h1>
+        <div class="fixed-top mt-2 ml-2 .text-muted" style="font-size:medium;">Users : <span
+                style="color: darkturquoise;"><%= userCount %></span></div>
         <form class="my-4" id="myForm">
             <label for="url" class="sr-only">URL</label>
             <input placeholder="http://" required type="url" name="url" id="url" class="form-control col mr-2 mb-2">
@@ -51,7 +53,7 @@
                         <div class="mt-2">
                             <a class="btn btn-success btn-sm check-btn" id="check-link-availability">Check
                                 Availability</a>
-                            <h4 class="mt-2 text-dark" id="link-availability-status"></h4>
+                            <h4 class="mt-2" id="link-availability-status"></h4>
                         </div>
                     </div>
                 </div>
@@ -63,6 +65,7 @@
                 <tr>
                     <th>#</th>
                     <th>Full URL</th>
+                    <th>isPrivate</th>
                     <th>Short URL</th>
                     <th>Clicks</th>
                     <th></th>
@@ -73,7 +76,13 @@
                 <tr data-id="<%= url._id %> ">
                     <th><%= i+1 %> </th>
                     <td><a href="<%= url.fullURL %>" target="_blank"><%= url.fullURL %></a></td>
+                    <td><%= url.isPrivate %></td>
+                    <% if (url.isPrivate === false) { %>
                     <td><a href="/url/slug/<%= url.slug %>" target="_blank" class="slugUrl"><%= url.slug %></a></td>
+                    <%} else { %>
+                    <td><a href="/url/slug/<%= url.slug %>/<%= url.privateSlug %>" target=_blank"
+                            class="slugUrl"><%= url.slug %>/<%= url.privateSlug %> </a></td>
+                    <% } %>
                     <td><%= url.clicks %></td>
                     <td>
                         <li class="list-inline-item">

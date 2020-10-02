@@ -17,22 +17,29 @@ const app = express();
 
 app.enable('trust proxy');
 
+// View engine = ejs
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(cors());
 app.options('*', cors());
 
+// Static file serving
 app.use(express.static(path.join(__dirname, 'public')));
 
+// HTTP headers
 app.use(
 	helmet({
 		contentSecurityPolicy: false,
 	})
 );
 
-app.use(morgan('dev'));
+// Logging
+if (process.env.NODE_ENV === 'development') {
+	app.use(morgan('dev'));
+}
 
+// Rate limiting
 const limiter = rateLimit({
 	max: 50,
 	windowMs: 60 * 60 * 1000,
@@ -40,6 +47,7 @@ const limiter = rateLimit({
 });
 app.use('/url', limiter);
 
+// JSON parsing and url params
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
@@ -49,14 +57,13 @@ app.use(mongoSanitize());
 // Data sanitization againsst XSS
 app.use(xss());
 
-app.use(
-	hpp({
-		whitelist: ['slug'],
-	})
-);
+// Prevents parameter pollution
+app.use(hpp());
 
+// G-zip compression
 app.use(compression());
 
+// Routes
 app.use('/', viewRouter);
 app.use('/url', urlRouter);
 

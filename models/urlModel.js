@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const fnv = require('fnv-plus');
-const nanoid = require('nanoid');
+const { nanoid } = require('nanoid');
 
 const CM = require('./counterModel');
 
@@ -26,13 +26,15 @@ const urlSchema = new mongoose.Schema({
 		required: [true, 'Number of clicks are required.'],
 		default: 0,
 	},
-	userIp: {
-		type: String,
-		required: [true, 'A user must have an ip address'],
-		validate: [validator.isIP, 'Your IP address is altered!!'],
+	user: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'User',
+		required: [true, 'A Url must have a user'],
 	},
-	isPrivate: Boolean,
-	privateSlug: String,
+	isPrivate: { type: Boolean, default: false },
+	privateSlug: {
+		type: String,
+	},
 });
 
 urlSchema.index({ slug: 1 });
@@ -40,11 +42,18 @@ urlSchema.index({ slug: 1 });
 urlSchema.pre('save', async function (next) {
 	if (!this.slug) {
 		const CQ = await CM.findOne();
-		console.log(CQ.counter);
 		this.slug = fnv.hash(CQ.counter.toString(), 32).hex();
 		CQ.save();
 	}
 	if (this.isPrivate) this.privateSlug = nanoid(4);
+	next();
+});
+
+urlSchema.pre(/^find/, function (next) {
+	this.populate({
+		path: 'user',
+		select: 'userIp',
+	});
 	next();
 });
 

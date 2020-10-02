@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const shortify = async (url, slug) => {
+export const shortify = async (url, slug, isPrivate) => {
 	try {
 		const post = await axios({
 			method: 'post',
@@ -8,6 +8,7 @@ export const shortify = async (url, slug) => {
 			data: {
 				url: url,
 				slug: slug,
+				isPrivate: isPrivate,
 			},
 		});
 		if (post.data.status === 'success') {
@@ -19,10 +20,8 @@ export const shortify = async (url, slug) => {
 	} catch (err) {
 		if (err.response.data.message.startsWith('E11000')) {
 			alert('ERROR!! SLUG ALREADY IN USE');
-			console.log(err);
 		} else {
 			alert('Oops, something went wrong');
-			console.log(err);
 		}
 	}
 };
@@ -37,7 +36,7 @@ export const deletify = async (id) => {
 			alert('Short url deleted successfully!!');
 			window.setTimeout(() => {
 				location.assign('/');
-			}, 20);
+			}, 30);
 		}
 	} catch (err) {
 		alert('Something went wrong');
@@ -49,7 +48,7 @@ export const checkAvailability = async (slug) => {
 	try {
 		const res = await axios({
 			method: 'GET',
-			url: `/slug/checkSlug/${slug}`,
+			url: `/url/checkSlug/${slug}`,
 		});
 		return res.data.message;
 	} catch (err) {

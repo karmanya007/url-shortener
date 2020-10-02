@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 process.on('uncaughtException', (err) => {
 	console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
@@ -7,10 +8,16 @@ process.on('uncaughtException', (err) => {
 	process.exit(1);
 });
 
+dotenv.config({ path: './config.env' });
 const app = require('./app');
 
+const DB = process.env.DATABASE.replace(
+	'<PASSWORD>',
+	process.env.DATABASE_PASSWORD
+);
+
 mongoose
-	.connect('mongodb://localhost/urlShortener', {
+	.connect(DB, {
 		useNewUrlParser: true,
 		useCreateIndex: true,
 		useFindAndModify: false,
@@ -19,7 +26,7 @@ mongoose
 	.then(() => console.log('Database connected...'));
 
 const port = process.env.PORT || 1337;
-app.listen(port, '192.168.1.6', () => {
+const server = app.listen(port, '192.168.1.6', () => {
 	console.log(`Listining on port ${port}`);
 });
 

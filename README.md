@@ -1,7 +1,7 @@
 # Shortify
 
 A url shortening dynamic website
-[Deployed version]()
+[Deployed version](https://sh-urls.herokuapp.com/)
 
 ---
 

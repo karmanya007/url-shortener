@@ -1,7 +1,7 @@
 # Shortify
 
 A url shortening dynamic website
-[Deployed version](https://sh-urls.herokuapp.com/)
+[Deployed version](https://shortify-url.glitch.me/)
 
 ---
 
